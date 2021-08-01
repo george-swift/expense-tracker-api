@@ -28,4 +28,8 @@ RSpec.describe User, type: :model do
       it { should allow_value(valid_address).for(:email) }
     end
   end
+
+  describe 'associations' do
+    it { should have_many(:lists).order(created_at: :desc).dependent(:destroy) }
+  end
 end
