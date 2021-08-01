@@ -23,7 +23,7 @@ class UsersController < ApplicationController
       log_in @user
       render json: { user: @user }, status: :created
     else
-      render json: { error: @user.error.full_messages }, status: :internal_server_error
+      render json: { error: @user.errors.full_messages }, status: :internal_server_error
     end
   end
 
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       render json: { message: 'Profile successfully updated' }, status: :ok
     else
-      render json: { message: 'Could not update profile' }, status: :bad_request
+      render json: { error: 'Could not update profile' }, status: :bad_request
     end
   end
 
