@@ -100,7 +100,7 @@ RSpec.describe 'Lists', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'returns a not found message' do
+      it 'updates the list' do
         expect(List.find(id).name).to match(/Special/)
       end
     end
