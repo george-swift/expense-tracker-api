@@ -31,5 +31,6 @@ RSpec.describe User, type: :model do
 
   describe 'associations' do
     it { should have_many(:lists).order(created_at: :desc).dependent(:destroy) }
+    it { should have_many(:expenses).through(:lists) }
   end
 end
