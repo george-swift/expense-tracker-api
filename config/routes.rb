@@ -1,3 +1,10 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  get '/login_status', to: 'sessions#status'
+  post '/login', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy'
+  resources :users, shallow: true do
+    resources :lists do
+      resources :expenses
+    end
+  end
 end
