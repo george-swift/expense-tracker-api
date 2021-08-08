@@ -9,7 +9,7 @@ RSpec.describe Expense, type: :model do
       should validate_numericality_of(:amount)
         .is_greater_than(0)
     end
-    it { should validate_length_of(:notes).is_at_most(255) }
+    it { should validate_length_of(:notes).is_at_most(140) }
   end
 
   describe 'associations' do
