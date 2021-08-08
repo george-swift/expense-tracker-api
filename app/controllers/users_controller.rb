@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     if @user
-      render json: { user: @user }
+      render json: { user: @user, expenses: @user.expenses }
     else
       render json: { error: 'User not found' }, status: :internal_server_error
     end
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       log_in @user
-      render json: { user: @user }, status: :created
+      render json: { user: current_user }, status: :created
     else
       render json: { error: @user.errors.full_messages }, status: :internal_server_error
     end
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      render json: { message: 'Profile successfully updated' }, status: :ok
+      render json: { user: @user, message: 'Profile successfully updated' }, status: :ok
     else
       render json: { error: 'Could not update profile' }, status: :bad_request
     end

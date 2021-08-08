@@ -22,7 +22,7 @@ class ListsController < ApplicationController
   def update
     if @list
       @list.update(list_params)
-      render json: { message: 'List sucessfully updated' }, status: :ok
+      render json: { list: @list, message: 'List sucessfully updated' }, status: :ok
     else
       render json: { error: 'Unable to update list' }, status: :bad_request
     end
@@ -31,7 +31,7 @@ class ListsController < ApplicationController
   def destroy
     if @list
       @list.destroy
-      render json: { message: 'List deleted' }, status: :ok
+      render json: { id: @list.id, message: 'List deleted' }, status: :ok
     else
       render json: { error: 'Unable to delete list' }, status: :bad_request
     end

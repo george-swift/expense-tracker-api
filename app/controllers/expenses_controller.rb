@@ -23,7 +23,7 @@ class ExpensesController < ApplicationController
   def update
     if @expense
       @expense.update(expense_params)
-      render json: { message: 'Expense sucessfully updated' }, status: :ok
+      render json: { expense: @expense, message: 'Expense sucessfully updated' }, status: :ok
     else
       render json: { error: 'Unable to update expense' }, status: :bad_request
     end
@@ -32,7 +32,7 @@ class ExpensesController < ApplicationController
   def destroy
     if @expense
       @expense.destroy
-      render json: { message: 'Expense deleted' }, status: :ok
+      render json: { id: @expense.id, message: 'Expense deleted' }, status: :ok
     else
       render json: { error: 'Unable to delete expense' }, status: :bad_request
     end
