@@ -56,8 +56,8 @@ RSpec.describe 'Users', type: :request do
     context 'when the request is invalid' do
       before { post '/users', params: invalid_attributes }
 
-      it 'returns status code 500' do
-        expect(response).to have_http_status(:internal_server_error)
+      it 'returns status code 422' do
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it 'returns a validation error message' do
@@ -91,7 +91,7 @@ RSpec.describe 'Users', type: :request do
       before { put "/users/#{user.id}", params: invalid_attributes }
 
       it 'returns status code 400' do
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it 'returns an error message' do
