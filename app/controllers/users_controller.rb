@@ -1,11 +1,7 @@
 class UsersController < ApplicationController
   def index
     @users = User.all
-    if @users
-      render json: { users: @users }
-    else
-      render json: { error: 'No users found' }, status: :internal_server_error
-    end
+    render json: { users: @users }
   end
 
   def show
@@ -23,7 +19,7 @@ class UsersController < ApplicationController
       log_in @user
       render json: { user: current_user }, status: :created
     else
-      render json: { error: @user.errors.full_messages }, status: :internal_server_error
+      render json: { error: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -32,7 +28,7 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       render json: { user: @user, message: 'Profile successfully updated' }, status: :ok
     else
-      render json: { error: 'Could not update profile' }, status: :bad_request
+      render json: { error: 'Could not update profile' }, status: :unprocessable_entity
     end
   end
 

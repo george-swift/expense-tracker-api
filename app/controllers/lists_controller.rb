@@ -24,7 +24,7 @@ class ListsController < ApplicationController
       @list.update(list_params)
       render json: { list: @list, message: 'List sucessfully updated' }, status: :ok
     else
-      render json: { error: 'Unable to update list' }, status: :bad_request
+      render json: { error: 'Unable to update list' }, status: :unprocessable_entity
     end
   end
 
