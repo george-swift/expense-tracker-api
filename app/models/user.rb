@@ -6,4 +6,8 @@ class User < ApplicationRecord
                     format: { with: URI::MailTo::EMAIL_REGEXP }
   has_secure_password
   validates :password, length: { minimum: 6 }, allow_nil: true
+
+  def as_json(options = nil)
+    super({ only: %i[id username email] }.merge(options || {}))
+  end
 end
