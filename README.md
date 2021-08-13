@@ -9,10 +9,10 @@ _Base URL_: `https://api-expense-tracker.herokuapp.com`
 |Description|Method|Endpoint|
 |:---|:---|:---|
 |Sign up to create an account|POST|`/users`|
-|Log in to created account|POST|`/login`|
+|Log in to created account|POST|`/sessions`|
 |Display user account information|GET|`users/:id`|
 |Edit existing user account|PUT|`users/:id`|
-|Log out if logged in|DELETE|`/logout`|
+|Log out if logged in|DELETE|`/sessions`|
 |Fetch user's lists of expenses|GET|`users/:user_id/lists`|
 |Create a new list|POST|`users/:user_id/lists`|
 |Update an existing list|PUT|`/lists/:id`|
