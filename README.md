@@ -31,6 +31,7 @@ _Base URL_: `https://api-expense-tracker.herokuapp.com`
 |Success|:created|201|
 |Client Error|:bad_request|400|
 |Client Error|:unauthorized|401|
+|Client Error|:unprocessable_entity|422|
 |Server Error|:internal_server_error|500|
 
 
