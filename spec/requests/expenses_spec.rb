@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Expenses', type: :request do
   let!(:users) { create_list(:user, 2) }
+  let(:tokenUserOne) { AuthenticationTokenService.encode(users.first.id) }
+  let(:tokenUserTwo) { AuthenticationTokenService.encode(users.second.id) }
 
   let!(:list_one) { create(:list, user_id: users.first.id) }
   let(:list_one_id) { list_one.id }
@@ -77,7 +79,10 @@ RSpec.describe 'Expenses', type: :request do
     let(:invalid_attributes) { { expense: { title: '', amount: 20, date: '', list_id: list_one_id } } }
 
     context 'when the request is invalid' do
-      before { post "/lists/#{list_one_id}/expenses", params: invalid_attributes }
+      before do
+        post "/lists/#{list_one_id}/expenses", params: invalid_attributes,
+                                               headers: { 'Authorization' => "Bearer #{tokenUserOne}" }
+      end
 
       it 'returns status code 400' do
         expect(response).to have_http_status(:bad_request)
@@ -90,7 +95,10 @@ RSpec.describe 'Expenses', type: :request do
     end
 
     context 'when the request is valid' do
-      before { post "/lists/#{list_one_id}/expenses", params: valid_attributes }
+      before do
+        post "/lists/#{list_one_id}/expenses", params: valid_attributes,
+                                               headers: { 'Authorization' => "Bearer #{tokenUserOne}" }
+      end
 
       it 'returns status code 200' do
         expect(response).to have_http_status(:ok)
@@ -106,7 +114,10 @@ RSpec.describe 'Expenses', type: :request do
   describe 'PUT /expenses/:id' do
     let(:valid_attributes) { { expense: { title: 'Dinner at SteakHouse' } } }
 
-    before { put "/expenses/#{expense_two_id}", params: valid_attributes }
+    before do
+      put "/expenses/#{expense_two_id}", params: valid_attributes,
+                                         headers: { 'Authorization' => "Bearer #{tokenUserTwo}" }
+    end
 
     context 'when an expense does not exist in database' do
       let(:expense_two_id) { 0 }
@@ -132,13 +143,13 @@ RSpec.describe 'Expenses', type: :request do
   end
 
   describe 'DELETE /expenses/:id' do
-    before { delete "/expenses/#{expense_one_id}" }
+    before { delete "/expenses/#{expense_one_id}", headers: { 'Authorization' => "Bearer #{tokenUserOne}" } }
 
     it 'returns status code 200' do
       expect(response).to have_http_status(:ok)
     end
 
-    before { get "/lists/#{list_two_id}/expenses" }
+    before { get "/lists/#{list_two_id}/expenses", headers: { 'Authorization' => "Bearer #{tokenUserTwo}" } }
 
     it 'decreases the count of expenses in the database' do
       expect(json.size).to eq(4)

@@ -4,10 +4,11 @@ RSpec.describe 'Lists', type: :request do
   let!(:user) { create(:user) }
   let!(:lists) { create_list(:list, 3, user_id: user.id) }
   let(:user_id) { user.id }
+  let(:token) { AuthenticationTokenService.encode(user.id) }
   let(:id) { lists.first.id }
 
   describe 'GET /users/:user_id/lists' do
-    before { get "/users/#{user_id}/lists" }
+    before { get "/users/#{user_id}/lists", headers: { 'Authorization' => "Bearer #{token}" } }
 
     context 'when user does not exist in database' do
       let(:user_id) { 0 }
@@ -54,7 +55,11 @@ RSpec.describe 'Lists', type: :request do
     let(:invalid_attributes) { { list: { name: '', user_id: user_id } } }
 
     context 'when the request is invalid' do
-      before { post "/users/#{user_id}/lists", params: invalid_attributes }
+      before do
+        post "/users/#{user_id}/lists",
+             params: invalid_attributes,
+             headers: { 'Authorization' => "Bearer #{token}" }
+      end
 
       it 'returns status code 400' do
         expect(response).to have_http_status(:bad_request)
@@ -66,7 +71,9 @@ RSpec.describe 'Lists', type: :request do
     end
 
     context 'when the request is valid' do
-      before { post "/users/#{user_id}/lists", params: valid_attributes }
+      before do
+        post "/users/#{user_id}/lists", params: valid_attributes, headers: { 'Authorization' => "Bearer #{token}" }
+      end
 
       it 'returns status code 200' do
         expect(response).to have_http_status(:ok)
@@ -81,7 +88,7 @@ RSpec.describe 'Lists', type: :request do
   describe 'PUT /lists/:id' do
     let(:valid_attributes) { { list: { name: 'Special expense' } } }
 
-    before { put "/lists/#{id}", params: valid_attributes }
+    before { put "/lists/#{id}", params: valid_attributes, headers: { 'Authorization' => "Bearer #{token}" } }
 
     context 'when the list does not exist in database' do
       let(:id) { 0 }
@@ -107,13 +114,13 @@ RSpec.describe 'Lists', type: :request do
   end
 
   describe 'DELETE /lists/:id' do
-    before { delete "/lists/#{id}" }
+    before { delete "/lists/#{id}", headers: { 'Authorization' => "Bearer #{token}" } }
 
     it 'returns status code 200' do
       expect(response).to have_http_status(:ok)
     end
 
-    before { get "/users/#{user_id}/lists" }
+    before { get "/users/#{user_id}/lists", headers: { 'Authorization' => "Bearer #{token}" } }
 
     it 'decreases the count of lists in the database' do
       expect(json.size).to eq(2)

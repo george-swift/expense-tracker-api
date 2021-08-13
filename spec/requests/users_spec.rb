@@ -61,7 +61,6 @@ RSpec.describe 'Users', type: :request do
       end
 
       it 'returns a validation error message' do
-        expect(!session[:user_id].nil?).to be(false)
         expect(json['error'].to_s).to match('Email is invalid')
       end
     end
@@ -75,7 +74,6 @@ RSpec.describe 'Users', type: :request do
 
       it 'creates a new user' do
         expect(json['user']['username']).to eq('Foobar')
-        expect(!session[:user_id].nil?).to be(true)
       end
     end
   end
@@ -83,12 +81,14 @@ RSpec.describe 'Users', type: :request do
   describe 'PUT /users' do
     let(:user) { users.first }
 
+    let(:token) { AuthenticationTokenService.encode(user.id) }
+
     let(:valid_attributes) { { user: { username: 'Kent' } } }
 
     let(:invalid_attributes) { { user: { username: '' } } }
 
     context 'when the request is invalid' do
-      before { put "/users/#{user.id}", params: invalid_attributes }
+      before { put "/users/#{user.id}", params: invalid_attributes, headers: { 'Authorization' => "Bearer #{token}" } }
 
       it 'returns status code 400' do
         expect(response).to have_http_status(:unprocessable_entity)
@@ -100,7 +100,7 @@ RSpec.describe 'Users', type: :request do
     end
 
     context 'when the request is valid' do
-      before { put "/users/#{user.id}", params: valid_attributes }
+      before { put "/users/#{user.id}", params: valid_attributes, headers: { 'Authorization' => "Bearer #{token}" } }
 
       it 'returns status code 200' do
         expect(response).to have_http_status(:ok)
