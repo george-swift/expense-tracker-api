@@ -1,4 +1,5 @@
 class ExpensesController < ApplicationController
+  skip_before_action :authorized, except: %i[create update destroy]
   before_action :find_list, only: %i[index create]
   before_action :find_expense, except: %i[index create]
 

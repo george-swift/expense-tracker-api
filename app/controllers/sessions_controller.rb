@@ -1,17 +1,19 @@
 class SessionsController < ApplicationController
+  skip_before_action :authorized, only: :create
+
   def create
     @user = User.find_by(username: session_params[:username])
     if @user&.authenticate(session_params[:password])
-      log_in @user
-      render json: { signed_in: true, user: current_user }
+      @token = encode_token(@user)
+      render json: { authenticated: true, user: @user.as_json, token: @token }, status: :created
     else
       render json: { error: 'Invalid username/password combination' }, status: :unauthorized
     end
   end
 
   def destroy
-    log_out if logged_in?
-    render json: { signed_out: true }, status: :ok
+    log_out
+    render json: { authenticated: false }, status: :ok
   end
 
   private

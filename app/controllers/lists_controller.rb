@@ -1,4 +1,5 @@
 class ListsController < ApplicationController
+  skip_before_action :authorized, only: :show
   before_action :find_user, only: %i[index create]
   before_action :find_list, except: %i[index create]
 
