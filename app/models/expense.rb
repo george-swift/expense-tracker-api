@@ -5,4 +5,8 @@ class Expense < ApplicationRecord
   validates :date, presence: true
   validates :notes, length: { maximum: 140 }
   default_scope -> { order(created_at: :desc) }
+
+  def as_json(options = nil)
+    super({ except: %i[created_at updated_at] }.merge(options || {}))
+  end
 end

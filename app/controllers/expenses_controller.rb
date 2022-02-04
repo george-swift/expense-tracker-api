@@ -4,7 +4,7 @@ class ExpensesController < ApplicationController
   before_action :find_expense, except: %i[index create]
 
   def index
-    render json: @list.expenses
+    render json: @list.expenses.as_json
   end
 
   def show
