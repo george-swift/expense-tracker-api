@@ -4,7 +4,7 @@ class ListsController < ApplicationController
   before_action :find_list, except: %i[index create]
 
   def index
-    render json: @user.lists
+    render json: @user.lists.as_json
   end
 
   def show

@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     if @user
-      render json: { user: @user.as_json, expenses: @user.expenses }
+      render json: { user: @user.as_json, lists: @user.lists, expenses: @user.expenses }
     else
       render json: { error: 'User not found' }, status: :internal_server_error
     end
